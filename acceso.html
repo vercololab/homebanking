@@ -331,67 +331,71 @@
             font-size: 16px;
         }
 
+        
         /* ====== MOBILE - MODIFIÉ UNIQUEMENT ICI ====== */
-        @media (max-width: 900px) {
-            .main-container {
-                flex-direction: column;
-                padding: 0 20px;
-            }
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+        padding: 0 20px;
+    }
 
-            .left-column,
-            .right-column {
-                width: 100%;
-            }
+    .left-column,
+    .right-column {
+        width: 100%;
+    }
 
-            .red-line {
-                display: none;
-            }
+    .red-line {
+        display: none;
+    }
 
-            .left-column {
-                margin-bottom: 40px;
-            }
+    .left-column {
+        margin-bottom: 40px;
+    }
 
-            footer {
-                flex-direction: column;
-                gap: 15px;
-                padding: 20px;
-            }
+    footer {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
 
-            /* 8 champs visibles avec scroll horizontal */
-            .password-inputs {
-                gap: 6px;
-                overflow-x: auto;
-                padding: 5px;
-                -webkit-overflow-scrolling: touch;
-                justify-content: flex-start;
-            }
+    /* 8 champs centrés avec scroll horizontal si besoin */
+    .password-inputs {
+        gap: 6px;
+        overflow-x: auto;
+        padding: 5px;
+        -webkit-overflow-scrolling: touch;
+        justify-content: center;          /* ← CENTRÉ */
+        min-width: min-content;           /* ← Force la largeur minimale */
+    }
 
-            .password-input-group {
-                flex-shrink: 0;
-            }
+    .password-input-group {
+        flex-shrink: 0;
+    }
 
-            .password-input-group input {
-                width: 38px;
-                height: 38px;
-                font-size: 16px;
-            }
+    .password-input-group input {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
 
-            .password-input-group .position {
-                font-size: 11px;
-            }
-        }
+    .password-input-group .position {
+        font-size: 11px;
+    }
+}
 
-        /* Très petit mobile */
-        @media (max-width: 400px) {
-            .password-input-group input {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
-            }
+/* Très petit mobile */
+@media (max-width: 400px) {
+    .password-input-group input {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
 
-            .password-inputs {
-                gap: 4px;
-            }
+    .password-inputs {
+        gap: 4px;
+        justify-content: center;          /* ← CENTRÉ aussi ici */
+    }
+} 
         }
     </style>
 </head>
